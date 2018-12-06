@@ -21,11 +21,10 @@ const exactlyXDups = (str, dups) => {
   return false
 }
 
-const calculateCheckSum = str => {
-  const strArray = str.split('\n')
+const calculateCheckSum = arr => {
   let twice = 0
   let thrice = 0
-  strArray.forEach(id => {
+  arr.forEach(id => {
     if (exactlyXDups(id, 2)) twice++
     if (exactlyXDups(id, 3)) thrice++
   })
@@ -51,15 +50,16 @@ const compareStrings = (str1, str2) => {
   }
 }
 
-const findBoxes = str => {
-  const sortedArray = str.split('\n').sort()
-  for (let i = 0; i < sortedArray.length - 1; i++) {
-    compareStrings(sortedArray[i], sortedArray[i + 1])
+const findBoxes = arr => {
+  arr = arr.sort()
+  for (let i = 0; i < arr.length - 1; i++) {
+    compareStrings(arr[i], arr[i + 1])
   }
 }
 
 const getInput = async () => {
-  const input = await fs.readFile(path.join(__dirname, 'input.txt'), 'utf8')
+  let input = await fs.readFile(path.join(__dirname, 'input.txt'), 'utf8')
+  input = input.split('\n')
   findBoxes(input)
 }
 
