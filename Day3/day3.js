@@ -8,31 +8,59 @@ const parseDirections = arr => {
       const xCoord = direction.split(' @ ')[1].split(': ')[0].split(',')[0]
       const yCoord = direction.split(' @ ')[1].split(': ')[0].split(',')[1]
       const width = direction.split(' @ ')[1].split(': ')[1].split('x')[0]
-      const length = direction.split(' @ ')[1].split(': ')[1].split('x')[1]
+      const height = direction.split(' @ ')[1].split(': ')[1].split('x')[1]
       output.push({
         xCoord: Number(xCoord),
         yCoord: Number(yCoord),
         width: Number(width),
-        length: Number(length)
+        height: Number(height)
       })
     }
   })
   return output
 }
 
+const maxHeight = arr => {
+  let max = arr[0].yCoord + arr[0].height
+  for (let i = 1; i < arr.length - 1; i++) {
+    if (arr[i].yCoord + arr[i].height > max) {
+      max = arr[i].yCoord + arr[i].height
+    }
+  }
+  return max
+}
+
 const populateGrid = arr => {
   const directions = parseDirections(arr)
+  const gridHeight = maxHeight(directions)
+  let doubleCount = 0
+
+  //create initial object with all yCoords as keys
   let gridObj = {}
+  for (let i = 0; i < gridHeight; i++) {
+    gridObj[i] = []
+  }
+
+  //fill in 1s where necessary
   directions.forEach(direction => {
-    //populate new rows
-    if (!gridObj[direction.yCoord]) {
-      gridObj[direction.yCoord] = Array(direction.xCoord + direction.xCoord)
-      for (let i = direction.xCoord; i <= direction.width; i++) {
-        gridObj[direction.yCoord][i] = 1
-      }
+    let filledRow = []
+    for (let i = direction.xCoord; i < direction.xCoord + direction.width; i++) {
+      filledRow.push(i)
+    }
+    for (let j = direction.yCoord; j < direction.yCoord + direction.height; j++) {
+      filledRow.forEach(coord => {
+        if (gridObj[j][coord]) {
+          if (gridObj[j][coord] === 1) {
+            gridObj[j][coord] = 2
+            doubleCount++
+          }
+        } else {
+          gridObj[j][coord] = 1
+        }
+      })
     }
   })
-  console.log(gridObj)
+  console.log(doubleCount)
 }
 
 const getInput = async () => {
