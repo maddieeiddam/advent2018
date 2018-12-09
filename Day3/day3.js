@@ -5,15 +5,18 @@ const parseDirections = arr => {
   let output = []
   arr.forEach(direction => {
     if (direction.length) {
+      const id = direction.split(' @ ')[0]
       const xCoord = direction.split(' @ ')[1].split(': ')[0].split(',')[0]
       const yCoord = direction.split(' @ ')[1].split(': ')[0].split(',')[1]
       const width = direction.split(' @ ')[1].split(': ')[1].split('x')[0]
       const height = direction.split(' @ ')[1].split(': ')[1].split('x')[1]
       output.push({
+        id,
         xCoord: Number(xCoord),
         yCoord: Number(yCoord),
         width: Number(width),
-        height: Number(height)
+        height: Number(height),
+        overlapped: false
       })
     }
   })
@@ -28,6 +31,24 @@ const maxHeight = arr => {
     }
   }
   return max
+}
+
+const findClaim = (gridObj, direction) => {
+  let overlapped = true
+  let filledRow = []
+  for (let i = direction.xCoord; i < direction.xCoord + direction.width; i++) {
+    filledRow.push(i)
+  }
+  for (let j = direction.yCoord; j < direction.yCoord + direction.height;j++) {
+    filledRow.forEach(coord => {
+      if (gridObj[j][coord] >= 2) {
+        overlapped = false
+      }
+    })
+  }
+  if (overlapped) {
+    console.log(direction)
+  }
 }
 
 const populateGrid = arr => {
@@ -60,7 +81,10 @@ const populateGrid = arr => {
       })
     }
   })
-  console.log(doubleCount)
+  directions.forEach(direction => {
+    return findClaim(gridObj, direction)
+  })
+  // console.log(doubleCount)
 }
 
 const getInput = async () => {
