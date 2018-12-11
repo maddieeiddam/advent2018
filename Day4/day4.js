@@ -29,6 +29,17 @@ const mode = arr => {
   ).pop()
 }
 
+const counts = (arr, min) => {
+  let count = 0
+  for (let i = 0; i < arr.length; i++) {
+    let num = arr[i]
+    if (num === min) {
+      count++
+    }
+  }
+  return count
+}
+
 const findSleepiest = obj => {
   let maxSleep = 0
   let sleepiest = 0
@@ -42,6 +53,13 @@ const findSleepiest = obj => {
   console.log('sleepiest minute is', mode(obj[sleepiest].asleepMins))
 }
 
+const overallMode = obj => {
+  for (let key in obj) {
+    let sleepiestMin = mode(obj[key].asleepMins)
+    let count = counts(obj[key].asleepMins, sleepiestMin)
+    console.log('guard', key, 'sleeps', count, 'times in minute', sleepiestMin)
+  }
+}
 
 const parseInput = arr => {
   arr.forEach(record => {
@@ -68,6 +86,7 @@ const parseInput = arr => {
     }
   })
   findSleepiest(guardObj)
+  overallMode(guardObj)
 }
 
 const getInput = async () => {
