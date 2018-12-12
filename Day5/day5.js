@@ -14,15 +14,25 @@ const opposites = (str1, str2) => {
 }
 
 const parseInput = arr => {
-  let output = [arr[0]]
-  for (let i = 1; i < arr.length; i++) {
-    if (opposites(arr[i], output[output.length - 1])) {
-      output.pop()
-    } else {
-      output.push(arr[i])
+  const letters = 'abcdefghijklmnopqrstuvwxyz'
+  for (let j = 0; j < letters.length; j++) {
+    let cleanedArr = []
+    for (let i = 0; i < arr.length; i++) {
+      let letter = arr[i].toLowerCase()
+      if (letter !== letters[j]) {
+        cleanedArr.push(arr[i])
+      }
     }
+    let output = [cleanedArr[0]]
+    for (let k = 1; k < cleanedArr.length; k++) {
+      if (opposites(cleanedArr[k], output[output.length - 1])) {
+        output.pop()
+      } else {
+        output.push(cleanedArr[k])
+      }
+    }
+    console.log(letters[j], output.length)
   }
-  console.log(output.length)
 }
 
 const getInput = async () => {
