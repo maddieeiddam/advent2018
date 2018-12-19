@@ -33,9 +33,40 @@ class instructionList {
   }
 }
 
+const traverseList = list => {
+  let completed = [list.list[0].value]
+  let nextOptions = list.list[0].next
+  while (nextOptions.length > 0) {
+    if (nextOptions.length === 1) {
+      let nextNode = nextOptions.shift()
+      completed.push(nextNode)
+    } else {
+      for (let i = 0; i < nextOptions.length; i++) {
+        if (!nextOptions.includes(nextOptions[i])) {
+          nextOptions.push(nextOptions[i])
+        }
+        let sorted = nextOptions.sort()
+        let nextVal = sorted.shift()
+        let nextNode = list.find(nextVal)
+        if (nextNode) {
+          if (nextNode.next.length > 1) {
+            for (let j = 0; j < nextNode.next.length; j++) {
+              nextOptions.push(nextNode.next[j])
+            }
+          } else if (nextNode.next.length === 1) {
+            nextOptions.push(nextNode.next[0])
+          }
+          completed.push(nextNode.value)
+        }
+      }
+    }
+  }
+  console.log('OPTIONS', nextOptions)
+  console.log('COMPLETED', completed)
+}
+
 
 const parseInput = arr => {
-  let orderedList = []
   let list = new instructionList()
   for (let i = 0; i < arr.length; i++) {
     const value = arr[i].split('Step ')[1].split(' must')[0]
@@ -47,18 +78,7 @@ const parseInput = arr => {
       list.addNode(value, next)
     }
   }
-  for (let j = 0; j < list.list.length; j++) {
-    let nextList = list.list[j].next
-    if (nextList.length > 1) {
-      let sortedList = nextList.sort()
-      for (let k = 0; k < sortedList.length; k++) {
-        orderedList.push(sortedList[k])
-      }
-    } else {
-      orderedList.push(nextList[0])
-    }
-  }
-  console.log(orderedList)
+  traverseList(list)
 }
 
 const getInput = async () => {
